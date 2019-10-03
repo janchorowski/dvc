@@ -17,7 +17,7 @@ os.environ[cast_bytes_py2("DVC_TEST")] = cast_bytes_py2("true")
 
 
 # Make DVC tests use separate OAuth token to access Google Drive
-def skip_pydrive_init(self):
+def skip_pydrive_init(_):
     pass
 
 
