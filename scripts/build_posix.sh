@@ -18,6 +18,15 @@ BIN_DIR=$BUILD_DIR/$INSTALL_DIR/bin
 DESC='Data Version Control - datasets, models, and experiments versioning for ML or data science projects'
 LIB_DIR=$BUILD_DIR/$INSTALL_DIR/lib
 
+FPM_PACKAGE_DIRS="usr"
+ZSH_CMPLT_DIR=usr/share/zsh/site-functions/_dvc
+if [[ "$(uname)" == 'Linux' ]]; then
+	BASH_CMPLT_DIR=etc/bash_completion.d
+	FPM_PACKAGE_DIRS="$FPM_PACKAGE_DIRS etc"
+else
+	BASH_CMPLT_DIR=usr/local/etc/bash_completion.d
+fi
+
 print_error()
 {
 	echo -e "\e[31m$1\e[0m"
@@ -51,7 +60,8 @@ fpm_build()
 	    $FPM_FLAGS \
 	    -n dvc \
 	    -v $VERSION \
-	    -C $BUILD_DIR usr
+	    -C $BUILD_DIR \
+	    $FPM_PACKAGE_DIRS
 }
 
 cleanup()
@@ -106,6 +116,12 @@ build_dvc()
 		popd
 		$BIN_DIR/dvc --help
 	fi
+
+	mkdir -p $BUILD_DIR/$BASH_CMPLT_DIR 
+	cp scripts/completion/dvc.bash $BUILD_DIR/$BASH_CMPLT_DIR/dvc
+
+	mkdir -p $BUILD_DIR/$ZSH_CMPLT_DIR
+	cp scripts/completion/dvc.zsh $BUILD_DIR/$ZSH_CMPLT_DIR
 }
 
 cleanup
