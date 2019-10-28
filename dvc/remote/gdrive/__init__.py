@@ -152,8 +152,10 @@ class RemoteGDrive(RemoteBASE):
         from_file.close()
 
     def _download(
-        self, from_info, to_file, _unused_name, _unused_no_progress_bar
+        self, from_info, to_file, name, no_progress_bar
     ):
+        del name  # unused
+        del no_progress_bar  # unused
         file_id = self.get_path_id(from_info)
         gdrive_file = self.drive.CreateFile({"id": file_id})
         gdrive_file.GetContentFile(to_file)
